@@ -51,11 +51,31 @@ module.exports.up = async () => {
                     table.string('priority')
                     table.string('status')
                     table
-                        .string('creator')
+                        .integer('creator')
                         .notNullable()
                     table
-                        .string('responsible')
+                        .integer('responsible')
                         .notNullable()
+                })
+            }
+        })
+
+        await knex.schema.hasTable('tasks_relation').then((exists) => {
+            if (!exists) {
+                return knex.schema.createTable('tasks_relation', (table) => {
+                    table
+                        .increments('id')
+                        .primary()
+                    table
+                        .integer('task_id')
+                        .references('tasks.id')
+                    table
+                        .integer('creator_id')
+                        .references('users.id')
+                    table
+                        .integer('responsible_id')
+                        .references('users.id')
+
                 })
             }
         })
@@ -66,5 +86,7 @@ module.exports.up = async () => {
 
 module.exports.down = async () => {
     await knex.schema.dropTableIfExists('users')
+    await knex.schema.dropTableIfExists('tasks_relation')
     await knex.schema.dropTableIfExists('tasks')
+
 }
