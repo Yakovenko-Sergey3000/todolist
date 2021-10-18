@@ -8,6 +8,10 @@ module.exports.up = async () => {
                         .increments('id')
                         .primary()
                     table
+                        .text('_id')
+                        .unique()
+                        .notNullable()
+                    table
                         .string('name', 20)
                         .notNullable()
                     table
@@ -26,6 +30,7 @@ module.exports.up = async () => {
                         .defaultTo('user')
                 }).then(() => {
                     return knex('users').insert({
+                        _id: 'hty2km5n6',
                         name: 'admin',
                         surname: 'superuser',
                         login: 'admin',
@@ -85,8 +90,7 @@ module.exports.up = async () => {
 }
 
 module.exports.down = async () => {
-    await knex.schema.dropTableIfExists('users')
-    await knex.schema.dropTableIfExists('tasks_relation')
-    await knex.schema.dropTableIfExists('tasks')
-
+    await knex.schema.hasTable('users').raw('DROP TABLE users CASCADE')
+    await knex.schema.hasTable('tasks_relation').raw('DROP TABLE tasks_relation CASCADE')
+    await knex.schema.hasTable('tasks').raw('DROP TABLE tasks CASCADE')
 }

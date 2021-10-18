@@ -2,10 +2,10 @@ const knex = require('../db.config');
 
 
 class AuthService {
-    async createUser(name, surname, patronymic, login, pass, position) {
+    async createUser(_id, name, surname, patronymic, login, pass, position) {
         return await knex('users')
-            .insert({ name, surname, patronymic, login, pass, position })
-            .returning(['id', 'name', 'surname', 'patronymic', 'login', 'position'])
+            .insert({ _id, name, surname, patronymic, login, pass, position })
+            .returning(['_id', 'name', 'surname', 'patronymic', 'login', 'position'])
     }
 
 

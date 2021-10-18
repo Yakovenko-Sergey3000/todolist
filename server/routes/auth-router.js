@@ -1,10 +1,9 @@
 const router = require('express').Router(),
-    UserController = require('../controllers/user.controllers'),
+    AuthController = require('../controllers/auth.controllers'),
     AuthService = require('../services/auth.services'),
     UsersServices = require('../services/users.services'),
-    { body, validationResult } = require('express-validator')
-
-
+    { body, validationResult } = require('express-validator'),
+    authController = new AuthController(new AuthService(), new UsersServices())
 
 
 
@@ -17,6 +16,8 @@ router.post(
         }
         return true
     }),
+    body('name').isLength({ min: 1 }).withMessage('Введите ваше имя'),
+    body('surname').isLength({ min: 1 }).withMessage('Введите вашу фамилию'),
     async (req, res) => {
         try {
             const validBody = validationResult(req)
@@ -29,11 +30,16 @@ router.post(
                     }
                 }))
             } else {
-                const user = new UserController(new AuthService(), new UsersServices(), req.body)
-                const responce = await user.createUser()
-                res.send(responce)
-            }
 
+                const responce = await authController.createUser(req.body)
+
+                if (Array.isArray(responce)) {
+                    req.session.user = responce
+                    res.send('Ok')
+                } else {
+                    res.send(responce)
+                }
+            }
 
         } catch (error) {
             console.log(error);
@@ -42,8 +48,21 @@ router.post(
     })
 
 
-router.post('/login', (req, res) => {
-    console.log(req.body);
-    res.send('ok')
+router.post('/login', async (req, res) => {
+    try {
+
+        const responce = await authController.loginUser(req.body)
+        if (Array.isArray(responce)) {
+            req.session.user = responce
+            res.send('Ok')
+        } else {
+            res.send(responce)
+        }
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+
+    }
+
 })
 module.exports = router
