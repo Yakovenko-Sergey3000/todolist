@@ -6,13 +6,16 @@ const AuthController = require("../controllers/auth.controllers"),
 const isLogin = async (req, res, next) => {
 
     if (req.cookies['connect.sid']) {
-        const idSess = req.cookies['connect.sid'].split(':')[1];
+        const idSess = req.cookies['connect.sid'].split('.')[0];
 
-        const t = await authController.isLogin(idSess)
-        console.log(req.cookies['connect.sid'].slice(0));
-        console.log(t);
-        next()
-
+        const sessions = await authController.isLogin(idSess.slice(2))
+        if (sessions.length) {
+            const user = sessions[0].sess.user[0]
+            req.activeUser = user
+            next()
+        } else {
+            res.send('go Login')
+        }
     } else {
         res.send("Don't cookies")
     }
