@@ -1,18 +1,14 @@
 const bcrypt = require('bcrypt'),
     soul = 6,
-    { v4: uuidv4 } = require('uuid');
+    { v4: uuidv4 } = require('uuid'),
+    { hideUserPassOnClient } = require('../castom-methods.js/castom-methods')
 
-const hideUserPassOnClient = (user) => { // TODO Проверить актуальность функции
-    return user.map(u => {
-        delete u['pass']
-        return u
-    })
-}
+
 
 
 
 class AuthController {
-    constructor(auth_service, users_service) {
+    constructor({ auth_service, users_service }) {
         this.auth_service = auth_service; // Use DB methods auth
         this.users_service = users_service; // Use DB methods users
     }
@@ -45,6 +41,10 @@ class AuthController {
         } catch (error) {
             return error.message
         }
+    }
+
+    async isLogin(idSess) {
+        return await this.auth_service.isValidSession(idSess)
     }
 }
 

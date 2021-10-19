@@ -1,16 +1,20 @@
-const knex = require('./db.config')
+require('dotenv').config()
+const knex = require('./db.config'),
+    bcrypt = require('bcrypt');
+
+
 module.exports.up = async () => {
     try {
         await knex.schema.hasTable('users').then((exists) => {
             if (!exists) {
                 return knex.schema.createTable('users', (table) => {
                     table
-                        .increments('id')
-                        .primary()
+                        .increments('id', { primaryKey: false })
                     table
                         .text('_id')
                         .unique()
                         .notNullable()
+                        .primary()
                     table
                         .string('name', 20)
                         .notNullable()
@@ -26,17 +30,20 @@ module.exports.up = async () => {
                         .string('pass')
                         .notNullable()
                     table
-                        .string('position')
+                        .text('position')
                         .defaultTo('user')
                 }).then(() => {
-                    return knex('users').insert({
-                        _id: 'hty2km5n6',
-                        name: 'admin',
-                        surname: 'superuser',
-                        login: 'admin',
-                        pass: 'admin',
-                        position: 'admin'
+                    bcrypt.hash(process.env.DB_SUPERUSER_PASS || 'admin', 6).then((hashPass) => {
+                        return knex('users').insert({
+                            _id: 'hty2km5n6',
+                            name: 'admin',
+                            surname: 'superuser',
+                            login: 'admin',
+                            pass: hashPass,
+                            position: 'admin'
+                        })
                     })
+
                 })
             }
         })
@@ -44,22 +51,27 @@ module.exports.up = async () => {
             if (!exists) {
                 return knex.schema.createTable('tasks', (table) => {
                     table
-                        .increments('id')
+                        .increments('id', { primaryKey: false })
+
+                    table
+                        .text('_id')
+                        .unique()
+                        .notNullable()
                         .primary()
                     table
                         .string('title', 100)
                         .notNullable()
                     table.text('text')
-                    table.date('date-end')
-                    table.date('date-created')
-                    table.date('date-start')
+                    table.date('date_end')
+                    table.date('date_created')
+                    table.date('date_start')
                     table.string('priority')
                     table.string('status')
                     table
-                        .integer('creator')
+                        .text('creator')
                         .notNullable()
                     table
-                        .integer('responsible')
+                        .text('responsible')
                         .notNullable()
                 })
             }
@@ -72,15 +84,11 @@ module.exports.up = async () => {
                         .increments('id')
                         .primary()
                     table
-                        .integer('task_id')
-                        .references('tasks.id')
+                        .text('task_id')
                     table
-                        .integer('creator_id')
-                        .references('users.id')
+                        .text('creator_id')
                     table
-                        .integer('responsible_id')
-                        .references('users.id')
-
+                        .text('responsible_id')
                 })
             }
         })

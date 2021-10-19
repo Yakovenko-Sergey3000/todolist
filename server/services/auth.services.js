@@ -8,6 +8,9 @@ class AuthService {
             .returning(['_id', 'name', 'surname', 'patronymic', 'login', 'position'])
     }
 
+    async isValidSession(idSess) {
+        return await knex('sessions').where({ sid: idSess }).select('*')
+    }
 
 }
 

@@ -3,7 +3,7 @@ const router = require('express').Router(),
     AuthService = require('../services/auth.services'),
     UsersServices = require('../services/users.services'),
     { body, validationResult } = require('express-validator'),
-    authController = new AuthController(new AuthService(), new UsersServices())
+    authController = new AuthController({ auth_service: new AuthService(), users_service: new UsersServices() })
 
 
 
@@ -35,6 +35,7 @@ router.post(
 
                 if (Array.isArray(responce)) {
                     req.session.user = responce
+
                     res.send('Ok')
                 } else {
                     res.send(responce)
@@ -50,7 +51,6 @@ router.post(
 
 router.post('/login', async (req, res) => {
     try {
-
         const responce = await authController.loginUser(req.body)
         if (Array.isArray(responce)) {
             req.session.user = responce

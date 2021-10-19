@@ -1,11 +1,13 @@
-const { Knex } = require('knex');
+
 
 require('dotenv').config()
 const express = require('express'),
     app = express(),
     PORT = process.env.PORT || 3000,
+    cookieParser = require('cookie-parser'),
     createTable = require('./createTable'),
     authRouter = require('./routes/auth-router'),
+    apiUsers = require('./routes/apiUsers'),
     session = require('express-session'),
     KnexSessionStore = require('connect-session-knex')(session),
     KnexSessionConfig = require('./knexSession.config')
@@ -16,6 +18,8 @@ const express = require('express'),
 
 
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 app.use(
     session({
         secret: 'keyboard cat',
@@ -29,6 +33,8 @@ app.use(
     }),
 );
 app.use('/', authRouter)
+app.use('/api', apiUsers)
+
 
 
 
