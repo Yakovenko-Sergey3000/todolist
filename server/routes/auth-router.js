@@ -50,11 +50,12 @@ router.post(
 
 
 router.post('/login', async (req, res) => {
+    console.log(req.body)
     try {
         const responce = await authController.loginUser(req.body)
         if (Array.isArray(responce)) {
             req.session.user = responce
-            res.send('Ok')
+            res.send({param: true})
         } else {
             res.send(responce)
         }

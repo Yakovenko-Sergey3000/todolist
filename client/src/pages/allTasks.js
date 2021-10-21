@@ -1,5 +1,7 @@
 import {Box, Button, List, ListItem, Tooltip} from "@mui/material";
 import Task from "../components/task/task";
+import TaskModal from "../components/taskModal/taskModal";
+import {useState} from "react";
 
 const AllTasks = () => {
 
@@ -53,7 +55,11 @@ const AllTasks = () => {
         },
 
     ]
-    const classes = {}
+
+    const [showModal, setShowModal] = useState(false)
+    const modalOpen = () => setShowModal(true);
+    const modalClose = () => setShowModal(false);
+
     return (
         <>
             <Box sx={{width: '100%', overflow: 'auto'}}>
@@ -74,13 +80,17 @@ const AllTasks = () => {
                        tasks.map(({_id, ...options}) => {
 
                            return (
-                               <ListItem key={_id}>
+                               <ListItem key={_id} onClick={modalOpen}>
                                    <Task options={options} />
                                </ListItem>
                            )
                        })
                    }
                </List>
+                <TaskModal
+                    open={showModal}
+                    handleClose={modalClose}
+                />
             </Box>
         </>
     )

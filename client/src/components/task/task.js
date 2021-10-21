@@ -35,6 +35,8 @@ const useStyled = makeStyles({
 
 })
 
+
+
 const Task = ({options}) => {
     const classes = useStyled()
     const {title, status,responsible, date_end,priority} = options;
