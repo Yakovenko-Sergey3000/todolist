@@ -19,7 +19,7 @@ class AuthController {
         try {
             const user = await this.users_service.getUserByLogin(login)
 
-            if (user[0]) throw new Error(JSON.stringify({ param: 'login', msg: 'Пользователь с таким логином уже существует' }))
+            if (user[0]) throw new Error(JSON.stringify([{ param: 'login', msg: 'Пользователь с таким логином уже существует' }]))
             const hashPass = await bcrypt.hash(pass, soul)
 
             return await this.auth_service.createUser(id, name, surname, patronymic, login, hashPass, position);

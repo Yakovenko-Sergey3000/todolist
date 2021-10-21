@@ -36,7 +36,7 @@ router.post(
                 if (Array.isArray(responce)) {
                     req.session.user = responce
 
-                    res.send('Ok')
+                    res.send([{param: true}])
                 } else {
                     res.send(responce)
                 }
