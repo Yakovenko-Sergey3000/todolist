@@ -14,10 +14,12 @@ const isLogin = async (req, res, next) => {
             req.activeUser = user
             next()
         } else {
-            res.send('go Login')
+
         }
     } else {
-        res.send("Don't cookies")
+        console.log('dont cookies')
+
+        res.send({"cookie": "false"})
     }
 
 

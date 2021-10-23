@@ -1,7 +1,8 @@
 import {Box, Button, List, ListItem, Tooltip} from "@mui/material";
 import Task from "../components/task/task";
 import TaskModal from "../components/taskModal/taskModal";
-import {useState} from "react";
+import {useContext, useState} from "react";
+import {AuthContext} from "../context/AuthContext";
 
 const AllTasks = () => {
 
@@ -59,6 +60,7 @@ const AllTasks = () => {
     const [showModal, setShowModal] = useState(false)
     const modalOpen = () => setShowModal(true);
     const modalClose = () => setShowModal(false);
+    const {user} = useContext(AuthContext)
 
     return (
         <>
@@ -88,6 +90,7 @@ const AllTasks = () => {
                    }
                </List>
                 <TaskModal
+                    user={user}
                     open={showModal}
                     handleClose={modalClose}
                 />

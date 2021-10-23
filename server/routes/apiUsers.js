@@ -7,7 +7,9 @@ const router = require('express').Router(),
     userControllers = new UserControllers({ users_service: new UsersServices(), tasks_service: new TasksServices() }),
     { hideUserPassOnClient } = require('../castom-methods.js/castom-methods'),
     isLogin = require('../middleware/isLogin'),
-    isAdmin = require('../middleware/isAdmin')
+    isAdmin = require('../middleware/isAdmin'),
+    {body, validationResult} = require('express-validator')
+
 
 
 router.get('/all-users', isLogin, isAdmin, async (req, res) => {
@@ -16,8 +18,23 @@ router.get('/all-users', isLogin, isAdmin, async (req, res) => {
     res.send(hideUserPassOnClient(responce))
 })
 
-router.post('/create-task', isLogin, isAdmin, async (req, res) => {
+router.post('/create-task',
+    isLogin,
+    isAdmin,
+    body('title').isLength({min: 1}).withMessage('Введите заголовок задачи'),
+    body('responsible').isLength({min: 1}).withMessage('Выберите отвественного'),
+    async (req, res) => {
+        const validBody = validationResult(req);
+        if (validBody.errors.length) {
+            res.send(validBody.errors.map(err => {
+                return {
+                    param: err.param,
+                    msg: err.msg
+                }
+            }))
+        }
     const responce = await userControllers.createTask(req.body)
+    console.log(responce)
     res.send(responce)
 })
 
@@ -28,7 +45,7 @@ router.put('/appoint-admin', isLogin, isAdmin, async (req, res) => {
 
 router.post('/my-tasks', isLogin, async (req, res) => {
     try {
-        console.log(req.user);
+
         const responce = await userControllers.getMyTasks(req.body)
         res.send(responce)
     } catch (error) {

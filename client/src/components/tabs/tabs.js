@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import AllTasks from "../../pages/allTasks";
 import NewTask from "../../pages/newTask"
+import {useContext} from "react";
+import {AuthContext} from "../../context/AuthContext";
 
 
 function TabPanel(props) {
@@ -44,6 +46,9 @@ function a11yProps(index) {
 export default function VerticalTabs() {
     const [value, setValue] = React.useState(0);
 
+    const {user} = useContext(AuthContext)
+    console.log(user)
+
 
     const showPage = (v) => {
         const pages = [<AllTasks/>, 'block', <NewTask/>]
@@ -55,7 +60,31 @@ export default function VerticalTabs() {
 
 
 
+const tabs = () => {
+    const tabsArr = [
+        <Tab label="Все задачи" {...a11yProps(0)} />,
+        <Tab label="Ответственные" {...a11yProps(1)} />,
+        <Tab label="Новая задача" {...a11yProps(2)} />,
+        ]
 
+    if(user) {
+        if(user.position === 'admin') {
+            let i = 0
+            return tabsArr.map(t => {
+                return {...t, key: i++}
+            })
+        }
+
+
+        return tabsArr[0]
+    }
+    return null
+
+
+
+
+
+}
 
     return (
         <Box
@@ -69,10 +98,7 @@ export default function VerticalTabs() {
                 aria-label="Vertical tabs example"
                 sx={{ borderRight: 1, borderColor: 'divider', minWidth: '200px'}}
             >
-
-                <Tab label="Все задачи" {...a11yProps(0)} />
-                <Tab label="Ответственные" {...a11yProps(1)} />
-                <Tab label="Новая задача" {...a11yProps(2)} />
+                {tabs()}
             </Tabs>
             {/*<TabPanel value={value} index={0}>*/}
             {/*    Активные задачи*/}

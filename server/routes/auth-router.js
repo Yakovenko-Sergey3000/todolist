@@ -3,8 +3,8 @@ const router = require('express').Router(),
     AuthService = require('../services/auth.services'),
     UsersServices = require('../services/users.services'),
     { body, validationResult } = require('express-validator'),
-    authController = new AuthController({ auth_service: new AuthService(), users_service: new UsersServices() })
-
+    authController = new AuthController({ auth_service: new AuthService(), users_service: new UsersServices() }),
+    isAuth = require('../middleware/isLogin')
 
 
 router.post(
@@ -36,7 +36,12 @@ router.post(
                 if (Array.isArray(responce)) {
                     req.session.user = responce
 
-                    res.send([{param: true}])
+                    res.send([
+                        {
+                            param: true,
+                            user: responce
+                        }
+                    ])
                 } else {
                     res.send(responce)
                 }
@@ -55,7 +60,13 @@ router.post('/login', async (req, res) => {
         const responce = await authController.loginUser(req.body)
         if (Array.isArray(responce)) {
             req.session.user = responce
-            res.send({param: true})
+            res.send([
+                {
+                    param: true,
+                    user: responce,
+                    idSess: req.sessionID
+                }
+            ])
         } else {
             res.send(responce)
         }
@@ -64,6 +75,25 @@ router.post('/login', async (req, res) => {
         res.send(error)
 
     }
+router.get('/is-login', isAuth, async (req,res) => {
+
+    try {
+        if (req.activeUser) {
+            res.send({
+                id: req.sessionID,
+                user: req.activeUser
+            })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.get('/clearCookie', async (req, res) => {
+        res.status(200)
+        res.clearCookie('connect.sid')
+        res.send()
+})
 
 })
 module.exports = router

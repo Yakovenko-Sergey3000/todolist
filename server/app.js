@@ -24,7 +24,7 @@ app.use(
     session({
         secret: 'keyboard cat',
         cookie: {
-            maxAge: 60000, // ten seconds, for testing
+            maxAge: 60000 * 60, // ten seconds, for testing
             nttpOnly: true
         },
         store: new KnexSessionStore(KnexSessionConfig),

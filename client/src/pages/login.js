@@ -7,7 +7,8 @@ import {
 
 import  {makeStyles} from "@mui/styles";
 import {useHttp} from "../hooks/http.hook";
-import {useState} from "react";
+import {useContext, useState} from "react";
+import {AuthContext} from "../context/AuthContext";
 
 const useStyled = makeStyles({
     loginForm: {
@@ -39,6 +40,7 @@ const Login = () => {
 
 
     const {loading, error, request} = useHttp()
+    const auth = useContext(AuthContext)
 
     const changeHadler = (e) => {
         setForm({...form, [e.target.name]: e.target.value})
@@ -47,19 +49,22 @@ const Login = () => {
         e.preventDefault()
         try {
             const data = await request('/login', 'POST', JSON.stringify({...form}) )
-            switch (data.param) {
-                case 'login' :
-                    setStatusLogin({...statusLogin, error: true, msg: data.msg} )
-                    break;
-                case 'pass': {
-                    setStatusPass({...statusLogin, error: true, msg: data.msg} )
-                    break;
-                }
-                case (true) :
-                    setStatusPass({...statusLogin, error: false, msg: ''} )
-                    setStatusLogin({...statusLogin, error: false, msg: ''} )
-                    break;
-            }
+           data.forEach(d => {
+               auth.login(d.idSess, d.user[0])
+               switch (d.param) {
+                   case 'login' :
+                       setStatusLogin({...statusLogin, error: true, msg: d.msg} )
+                       break;
+                   case 'pass': {
+                       setStatusPass({...statusLogin, error: true, msg: d.msg} )
+                       break;
+                   }
+                   case (true) :
+                       setStatusPass({...statusLogin, error: false, msg: ''} )
+                       setStatusLogin({...statusLogin, error: false, msg: ''} )
+                       break;
+               }
+           })
 
         } catch (e) {}
     }

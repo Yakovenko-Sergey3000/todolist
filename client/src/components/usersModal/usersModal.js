@@ -7,11 +7,27 @@ import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import {Input} from "@mui/material";
+import {useEffect, useState} from "react";
+import {useHttp} from "../../hooks/http.hook";
 
-const emails = ['username@gmail.com', 'user02@gmail.com' ,'username@gmail.com', 'user02@gmail.com','username@gmail.com', 'user02@gmail.com','username@gmail.com', 'user02@gmail.com','username@gmail.com', 'user02@gmail.com','username@gmail.com', 'user02@gmail.com','username@gmail.com', 'user02@gmail.com','username@gmail.com', 'user02@gmail.com','username@gmail.com', 'user02@gmail.com'];
+
+
 
 function SimpleDialog(props) {
     const { onClose, selectedValue, open } = props;
+    const [allUsers, setAllUsers] = useState([])
+    const {request} = useHttp()
+
+    const getUsers = async () => {
+        const res = await request('/api/all-users')
+        console.log(res)
+        setAllUsers(res)
+    }
+
+    useEffect(() => {
+        getUsers()
+    }, [])
+
 
     const handleClose = () => {
         onClose(selectedValue);
@@ -20,14 +36,14 @@ function SimpleDialog(props) {
     const handleListItemClick = (value) => {
         onClose(value);
     };
-
+    let i = 0
     return (
         <Dialog onClose={handleClose} open={open}>
             <DialogTitle>Работники</DialogTitle>
             <List sx={{ pt: 0 , width: '400px', height: '300px'}}>
-                {emails.map((email) => (
-                    <ListItem button onClick={() => handleListItemClick(email)} key={email}>
-                        <ListItemText primary={email} />
+                {allUsers.map((user) => (
+                    <ListItem button onClick={() => handleListItemClick({name: user.name, surname: user.surname, id: user._id})} key={user._id}>
+                        <ListItemText primary={`${user.name} ${user.surname}`} />
                     </ListItem>
                 ))}
             </List>
@@ -44,6 +60,7 @@ SimpleDialog.propTypes = {
 export default function UsersModal() {
     const [open, setOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState('');
+    const [idUser, setIdUser] = React.useState('')
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -51,12 +68,13 @@ export default function UsersModal() {
 
     const handleClose = (value) => {
         setOpen(false);
-        setSelectedValue(value);
+        setSelectedValue(`${value.name} ${value.surname}`);
+        setIdUser(value.id)
     };
 
     return (
         <div>
-          <Input type='hidden' name='responsible' value={selectedValue}/>
+          <Input type='hidden' name='responsible' value={idUser}/>
             <Button variant="outlined" onClick={handleClickOpen} sx={{width: '100%'}}>
                 {selectedValue ? selectedValue : 'Выбрать отвественного'}
             </Button>

@@ -4,13 +4,16 @@ import Registration from "./registration";
 import TodoList from "./todo-list";
 
 
+
 export  const useRoutes = isAuthenticated => {
+
+
     if(isAuthenticated) {
         return(
             <Switch>
 
                 <Route path='/app'>
-                    <TodoList/>
+                    { <TodoList/>}
                 </Route>
                 <Redirect to="/app"/>
             </Switch>

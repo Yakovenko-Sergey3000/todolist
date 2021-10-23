@@ -33,8 +33,8 @@ class AuthController {
         try {
             const user = await this.users_service.getUserByLogin(login, { openPass: true })
 
-            if (!user[0]) throw new Error(JSON.stringify({ param: 'login', msg: 'Пользователь еще не существует' }))
-            if (!await bcrypt.compareSync(pass, user[0].pass)) throw new Error(JSON.stringify({ param: 'pass', msg: 'Неверный пароль' }))
+            if (!user[0]) throw new Error(JSON.stringify([{ param: 'login', msg: 'Пользователь еще не существует' }]))
+            if (!await bcrypt.compareSync(pass, user[0].pass)) throw new Error(JSON.stringify([{ param: 'pass', msg: 'Неверный пароль' }]))
 
             return hideUserPassOnClient(user);
 

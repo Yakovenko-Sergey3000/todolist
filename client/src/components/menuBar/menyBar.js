@@ -4,9 +4,12 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import {useContext} from "react";
+import {AuthContext} from "../../context/AuthContext";
 
 
 export default function MenuBar() {
+    const auth = useContext(AuthContext)
     return (
         <Box>
             <AppBar position="static">
@@ -14,7 +17,11 @@ export default function MenuBar() {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Todo-list
                     </Typography>
-                    <Button color="inherit">Выйти</Button>
+                    <Button
+                        onClick={() => auth.logout()}
+                        color="inherit"
+                    >Выйти
+                    </Button>
                 </Toolbar>
             </AppBar>
         </Box>

@@ -1,28 +1,34 @@
 const knex = require('../db.config')
 
+
 class TasksServices {
     async createTask(id, title, text, date_end, date_created, date_start, priority, status, creator, responsible) {
 
-        const task = await knex('tasks')
-            .insert({
-                _id: id,
-                title,
-                text,
-                date_end,
-                date_created,
-                date_start,
-                priority,
-                status,
-                creator,
-                responsible
-            }).returning('*')
-        await knex('tasks_relation')
-            .insert({
-                task_id: id,
-                creator_id: creator,
-                responsible_id: responsible
-            }).returning('*')
-        return task
+       try {
+            await knex('tasks')
+               .insert({
+                   _id: id,
+                   title,
+                   text,
+                   date_end,
+                   date_created,
+                   date_start,
+                   priority,
+                   status,
+                   creator,
+                   responsible
+               })
+           await knex('tasks_relation')
+               .insert({
+                   task_id: id,
+                   creator_id: creator,
+                   responsible_id: responsible
+               })
+       } catch (e) {
+           return e.message
+       }
+
+
     }
 
     async getMyTasks(id) {

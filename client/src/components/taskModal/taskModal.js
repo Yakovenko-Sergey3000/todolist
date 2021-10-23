@@ -39,17 +39,16 @@ const formStyle__item = {
     flexDirection: 'column'
 }
 
-export default function TaskModal({open, handleClose}) {
+export default function TaskModal({open, handleClose, user}) {
     const [value, setValue] = React.useState(null );
     const [title, setTitle] = useState('')
     const [text, setText] = useState('')
-    const [] = useState('')
-    const [] = useState('')
-    const [] = useState('')
+    // const [] = useState('')
+    // const [] = useState('')
+    // const [] = useState('')
+    const disabled = user.position === 'user';
 
-    React.useEffect(() => {
-        setValue('10/21/2021')
-    })
+
 
 
     return (
@@ -65,11 +64,23 @@ export default function TaskModal({open, handleClose}) {
                     <form style={formStyle}>
                         <div style={formStyle__item}>
                             <Typography variant="body">Заголовок:</Typography>
-                            <TextField size='small' value={title} onChange={(e) => setTitle(e.target.value)}/>
+                            <TextField
+                                size='small'
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                disabled={disabled}
+                            />
+
                         </div>
                         <div style={formStyle__item}>
                             <Typography variant="body">Описание:</Typography>
-                            <TextField  size='small' value={text} multiline onChange={(e) => setText(e.target.value)}/>
+                            <TextField
+                                size='small'
+                                value={text}
+                                multiline
+                                onChange={(e) => setText(e.target.value)}
+                                disabled={disabled}
+                            />
                         </div>
                         <div style={formStyle__item}>
                             <Typography variant="body">Дата окончания:</Typography>
@@ -81,7 +92,7 @@ export default function TaskModal({open, handleClose}) {
                                     }}
                                     renderInput={(params) => <TextField {...params} name="date_end" sx={{width: '100%'}} size="small" />}
                                     minDate={new Date()}
-
+                                    disabled={disabled}
                                 />
                             </LocalizationProvider>
                         </div>
@@ -96,12 +107,15 @@ export default function TaskModal({open, handleClose}) {
                         <div style={formStyle__item}>
                             <Typography variant="body">Приоритет:</Typography>
                             <InputSelect
-                                itemСanсel={true}
+                                disabled={disabled}
                             />
                         </div>
                         <div style={formStyle__item}>
                             <Typography variant="body">Статус:</Typography>
-                            <TextField  size='small' value="Выполняется" disabled/>
+                            <InputSelect
+                                type="status"
+                                isAdmin={user.position === 'admin'}
+                            />
                         </div>
                         <div style={formStyle__item}>
                             <Typography variant="body">Создатель:</Typography>
