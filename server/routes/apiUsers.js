@@ -21,8 +21,11 @@ router.get('/all-users', isLogin, isAdmin, async (req, res) => {
 router.post('/create-task',
     isLogin,
     isAdmin,
-    body('title').isLength({min: 1}).withMessage('Введите заголовок задачи'),
     body('responsible').isLength({min: 1}).withMessage('Выберите отвественного'),
+    body('priority').isLength({min: 1}).withMessage('Выберите приоритет задачи'),
+    body('date_end').isLength({min: 1}).withMessage('Выберите дату когда нужно выполнить задачу'),
+    body('title').isLength({min: 1}).withMessage('Введите заголовок задачи'),
+
     async (req, res) => {
         const validBody = validationResult(req);
         if (validBody.errors.length) {
@@ -32,10 +35,16 @@ router.post('/create-task',
                     msg: err.msg
                 }
             }))
+        } else {
+            await userControllers.createTask(req.body)
+            res.send([{
+                status: 200,
+                msg: 'Задача создана!'
+            }])
         }
-    const responce = await userControllers.createTask(req.body)
-    console.log(responce)
-    res.send(responce)
+
+
+
 })
 
 router.put('/appoint-admin', isLogin, isAdmin, async (req, res) => {
@@ -43,7 +52,7 @@ router.put('/appoint-admin', isLogin, isAdmin, async (req, res) => {
     res.send('ok')
 })
 
-router.post('/my-tasks', isLogin, async (req, res) => {
+router.post('/user-tasks', isLogin, async (req, res) => {
     try {
 
         const responce = await userControllers.getMyTasks(req.body)
@@ -65,7 +74,7 @@ router.post('/assigned-tasks', isLogin, async (req, res) => {
 router.put('/change-options', async (req, res) => {
     try {
         await userControllers.changeOptions(req.body)
-        res.send('ok')
+        res.send({status: 200})
     } catch (error) {
         console.log(error);
     }

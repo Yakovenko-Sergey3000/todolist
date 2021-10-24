@@ -39,7 +39,7 @@ const Login = () => {
     })
 
 
-    const {loading, error, request} = useHttp()
+    const {loading, request} = useHttp()
     const auth = useContext(AuthContext)
 
     const changeHadler = (e) => {
@@ -49,8 +49,8 @@ const Login = () => {
         e.preventDefault()
         try {
             const data = await request('/login', 'POST', JSON.stringify({...form}) )
+
            data.forEach(d => {
-               auth.login(d.idSess, d.user[0])
                switch (d.param) {
                    case 'login' :
                        setStatusLogin({...statusLogin, error: true, msg: d.msg} )
@@ -62,7 +62,10 @@ const Login = () => {
                    case (true) :
                        setStatusPass({...statusLogin, error: false, msg: ''} )
                        setStatusLogin({...statusLogin, error: false, msg: ''} )
+                       auth.login(d.idSess, d.user[0])
                        break;
+                   default :
+
                }
            })
 

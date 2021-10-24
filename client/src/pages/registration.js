@@ -77,6 +77,8 @@ const Registration = () => {
                         setLoginError({...loginError, error: false,  msg: ''})
                         setPassError({...passError, error: false,  msg: ''})
                         setRepeatError({...repeatError, error: false,  msg: ''})
+                        break;
+                    default :
                 }
             })
 

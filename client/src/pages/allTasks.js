@@ -1,102 +1,139 @@
-import {Box, Button, List, ListItem, Tooltip} from "@mui/material";
+import {Box, Button, List, ListItem, Tooltip, Typography} from "@mui/material";
 import Task from "../components/task/task";
 import TaskModal from "../components/taskModal/taskModal";
-import {useContext, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import {AuthContext} from "../context/AuthContext";
+import {useHttp} from "../hooks/http.hook";
+import React from "react";
+import moment from "moment";
+import 'moment/locale/ru'
+moment.locale('ru')
 
 const AllTasks = () => {
-
-    const tasks = [
-        {
-            _id: 1,
-            title : 'Создать 2 задачи',
-            text : '',
-            date_end : '2021-10-25',
-            date_created : '2021-10-20',
-            date_start : '',
-            priority: 'Средний' ,
-            status: 'Выполнена',
-            creator: 'Алесандр Владимирович',
-            responsible: 'Анатолий'
-        },
-        {
-            _id: 2,
-            title : 'Соеденить сервер с фронтом',
-            text : '',
-            date_end : '10/11/2021',
-            date_created : '2021-10-20',
-            date_start : '',
-            priority: 'Важный' ,
-            status: 'Отменена',
-            creator: 'Алесандр Владимирович',
-            responsible: 'Анатолий'
-        },
-        {
-            _id: 3,
-            title : 'Соеденить сервер с фронтом',
-            text : '',
-            date_end : '10/11/2021',
-            date_created : '2021-10-20',
-            date_start : '',
-            priority: 'Важный' ,
-            status: 'К выполнению',
-            creator: 'Алесандр Владимирович',
-            responsible: 'Анатолий'
-        },{
-            _id: 4,
-            title : 'Соеденить сервер с фронтом',
-            text : '',
-            date_end : '10/11/2021',
-            date_created : '2021-10-20',
-            date_start : '',
-            priority: 'Важный' ,
-            status: 'Выполняется',
-            creator: 'Алесандр Владимирович',
-            responsible: 'Анатолий'
-        },
-
-    ]
-
     const [showModal, setShowModal] = useState(false)
-    const modalOpen = () => setShowModal(true);
+
     const modalClose = () => setShowModal(false);
     const {user} = useContext(AuthContext)
+    const {request} = useHttp()
+    const [tasks, setTasks] = useState([])
+    const [sortTasksOnDays, setSortTasksOnDays] = useState([])
+    const [taskId, setTaskId] = useState({})
+    const modalOpen = (id) => {
+        setShowModal(true)
+       const task = tasks.find(t => t._id === id )
+        setTaskId(task)
+    };
+
+
+    const transletePriority = {
+        high: 'Высокий',
+        medium: 'Средний',
+        low: 'Низкий'
+    }
+
+    const traslateStatus= {
+        to_implementation: 'К выполнению',
+        performed: 'Выполняется',
+        done: 'Выполнена',
+        cancel: 'Отменена'
+    }
+
+
+
+    const getUserTasks = useCallback(async () => {
+        const res = await request(
+            'api/user-tasks',
+            'POST',
+            JSON.stringify({id: user._id})
+        )
+        setTasks(res)
+        setSortTasksOnDays(res)
+
+    }, [request, user])
+
+    const sortTasks = (value, operator) => {
+        const now = moment()
+        const monday = now.clone().weekday(0)
+        const sunday = now.clone().weekday(6)
+        let newArrTasks = []
+
+         switch (value) {
+             case  'all' :
+                 newArrTasks = tasks.filter(t => t)
+                 break;
+             case 'today' :
+                 newArrTasks = tasks.filter(t =>  moment(t.date_end).date() === now.date() )
+                 break;
+             case 'week' :
+                 newArrTasks = tasks.filter(t => moment(t.date_end) >= monday && moment(t.date_end) <= sunday)
+                 break;
+             case 'more-week' :
+                 newArrTasks = tasks.filter(t => moment(t.date_end) > sunday)
+                 break;
+             default :
+         }
+
+        setSortTasksOnDays(newArrTasks)
+    }
+
+    const updateData = async (data) => {
+       await request(
+            'api/change-options',
+            'PUT',
+            JSON.stringify(data)
+        )
+        setShowModal(false)
+    }
+
+
+    useEffect(() => {
+        getUserTasks()
+    }, [getUserTasks, showModal])
+
 
     return (
         <>
             <Box sx={{width: '100%', overflow: 'auto'}}>
                 <Tooltip title="Все задачи">
-                    <Button>Все</Button>
+                    <Button onClick={() => sortTasks('all')}>Все</Button>
                 </Tooltip>
                 <Tooltip title="Задачи на сегодня">
-                    <Button>Сегодня</Button>
+                    <Button onClick={() => sortTasks('today')}>Сегодня</Button>
                 </Tooltip>
                 <Tooltip title="Задачи на неделю">
-                    <Button>На неделю</Button>
+                    <Button onClick={() => sortTasks('week')}>На неделю</Button>
                 </Tooltip>
                 <Tooltip title="Задачи на  будущее">
-                    <Button>На будущее</Button>
+                    <Button onClick={() => sortTasks('more-week')}>На будущее</Button>
                 </Tooltip>
                <List>
                    {
-                       tasks.map(({_id, ...options}) => {
-
-                           return (
-                               <ListItem key={_id} onClick={modalOpen}>
-                                   <Task options={options} />
-                               </ListItem>
-                           )
-                       })
+                      !sortTasksOnDays.length ? <Typography sx={{marginLeft: '20px'}} variant='h3'>Пока что у вас нету задач</Typography> :
+                          sortTasksOnDays.map(({_id, ...options}, i) => {
+                              return (
+                                  <ListItem key={_id} onClick={() => modalOpen(_id)}>
+                                      <Task
+                                          options={options}
+                                          transletePriority={transletePriority}
+                                          traslateStatus={traslateStatus}
+                                      />
+                                  </ListItem>
+                              )
+                          })
                    }
                </List>
                 <TaskModal
                     user={user}
                     open={showModal}
                     handleClose={modalClose}
+                    task={taskId}
+                    transletePriority={transletePriority}
+                    traslateStatus={traslateStatus}
+                    updateData={updateData}
                 />
             </Box>
         </>
     )
 }
 
-export default AllTasks;
+export default React.memo(AllTasks);

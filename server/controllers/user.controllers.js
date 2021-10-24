@@ -13,10 +13,10 @@ class User {
         return await this.users_service.getAllUsers()
     }
 
-    async createTask({ title, text, date_end, date_created, date_start = '', priority, status, creator, responsible }) {
+    async createTask({ title, text, date_end, date_created, date_updated, priority, status, creator, responsible }) {
         try {
             const id = uuidv4()
-            return await this.tasks_service.createTask(id, title, text, date_end, date_created, date_start, priority, status, creator, responsible)
+            return await this.tasks_service.createTask(id, title, text, date_end, date_created, date_updated, priority, status, creator, responsible)
 
         } catch (error) {
             return error.messages;

@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import {Input} from "@mui/material";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useHttp} from "../../hooks/http.hook";
 
 
@@ -18,25 +18,29 @@ function SimpleDialog(props) {
     const [allUsers, setAllUsers] = useState([])
     const {request} = useHttp()
 
-    const getUsers = async () => {
+    const getUsers = useCallback(async () => {
         const res = await request('/api/all-users')
         console.log(res)
         setAllUsers(res)
-    }
+    }, [request])
 
-    useEffect(() => {
+    useEffect( () => {
         getUsers()
-    }, [])
+    }, [getUsers])
 
 
     const handleClose = () => {
-        onClose(selectedValue);
+            onClose(selectedValue);
     };
 
     const handleListItemClick = (value) => {
-        onClose(value);
+
+       if (value) {
+           onClose(value);
+       }
+
     };
-    let i = 0
+
     return (
         <Dialog onClose={handleClose} open={open}>
             <DialogTitle>Работники</DialogTitle>
@@ -57,10 +61,10 @@ SimpleDialog.propTypes = {
     selectedValue: PropTypes.string.isRequired,
 };
 
-export default function UsersModal() {
+export default function UsersModal({resetInput}) {
     const [open, setOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState('');
-    const [idUser, setIdUser] = React.useState('')
+    const [idUser = '', setIdUser] = React.useState('')
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -68,9 +72,23 @@ export default function UsersModal() {
 
     const handleClose = (value) => {
         setOpen(false);
-        setSelectedValue(`${value.name} ${value.surname}`);
-        setIdUser(value.id)
+        if (typeof value === 'string') {
+            setSelectedValue('');
+            setIdUser('')
+        } else {
+            setSelectedValue(`${value.name} ${value.surname}`);
+            setIdUser(value.id)
+        }
+
     };
+
+    useEffect(() => {
+        setSelectedValue('');
+        setIdUser('')
+    }, [resetInput])
+
+
+
 
     return (
         <div>

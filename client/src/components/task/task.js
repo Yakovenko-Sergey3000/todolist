@@ -1,5 +1,6 @@
-import {Avatar, Box, Typography} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles";
+import moment from "moment";
 
 const useStyled = makeStyles({
     task: {
@@ -37,34 +38,40 @@ const useStyled = makeStyles({
 
 
 
-const Task = ({options}) => {
+const Task = ({options,transletePriority, traslateStatus}) => {
     const classes = useStyled()
-    const {title, status,responsible, date_end,priority} = options;
-    let bgColor = 'rgba(168,168,168,0.68)'
-     switch (status) {
-         case 'Выполнена' :
-                bgColor = 'rgba(62,191,91,0.66)'
-                break;
-         case 'Отменена' :
-                bgColor = 'rgba(220,97,97,0.66)'
 
-        }
+
+    const {title, status, date_end,priority, surname} = options;
+
+    let bgColor = 'rgba(168,168,168,0.68)'
+    if(moment(date_end).date() < moment().date()) bgColor = 'rgba(220,97,97,0.66)'
+     switch (status) {
+         case 'done' :
+             bgColor = 'rgba(62,191,91,0.66)'
+             break;
+         case 'cancel' :
+             bgColor = 'rgba(220,97,97,0.66)'
+             break;
+         default :
+     }
+
     return (
         <Box className={classes.task} sx={{backgroundColor: bgColor}} >
                 <Box className={classes.task__block}>
                     <Typography>{title}</Typography>
                 </Box>
                 <Box className={classes.task__block}>
-                    <Typography sx={{fontSize: "13px"}}>{priority}</Typography>
+                    <Typography sx={{fontSize: "13px"}}>{transletePriority[priority]}</Typography>
                 </Box>
                 <Box className={classes.task__block}>
-                    <Typography sx={{fontSize: "13px"}}>{date_end}</Typography>
+                    <Typography sx={{fontSize: "13px"}}>{moment(date_end).format('DD MMMM')}</Typography>
                 </Box>
                 <Box className={classes.task__block}>
-                    <Typography sx={{fontSize: "13px"}}>{responsible}</Typography>
+                    <Typography sx={{fontSize: "13px"}}>{surname}</Typography>
                 </Box>
                 <Box className={classes.task__block}>
-                    <Typography sx={{fontSize: "13px"}}>{status}</Typography>
+                    <Typography sx={{fontSize: "13px"}}>{traslateStatus[status]}</Typography>
                 </Box>
         </Box>
     )

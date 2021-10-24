@@ -4,21 +4,15 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import {useState} from "react";
 
-export default function BasicSelect({  isAdmin , type = 'priority', disabled}) {
-    const [age, setAge] = React.useState('');
 
-    const handleChange = (event) => {
-        setAge(event.target.value);
-    };
-
+export default function BasicSelect({  isAdmin , type = 'priority', disabled ,handleChange, value }) {
     const menuItemPriority = () => {
         let i = 0;
         const itemsPriority = [
             <MenuItem value="high">Высоки</MenuItem>,
-            <MenuItem value="Medium">Средний</MenuItem>,
-            <MenuItem value="Low">Низкий</MenuItem>,
+            <MenuItem value="medium">Средний</MenuItem>,
+            <MenuItem value="low">Низкий</MenuItem>,
         ]
 
             return (
@@ -31,13 +25,14 @@ export default function BasicSelect({  isAdmin , type = 'priority', disabled}) {
 
 
 
+
     const menuItemStatus = () => {
 
         let i = 0;
         const itemsStatus = [
             <MenuItem value="to_implementation">К выполнению</MenuItem>,
             <MenuItem value="performed">Выполняется</MenuItem>,
-            <MenuItem value="Done">Выполнено</MenuItem>,
+            <MenuItem value="done">Выполнено</MenuItem>,
         ]
 
         if (isAdmin) itemsStatus.push( <MenuItem value="cancel">Отменить</MenuItem> )
@@ -56,7 +51,7 @@ export default function BasicSelect({  isAdmin , type = 'priority', disabled}) {
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={age}
+                    value={value}
                     label={type === 'status' ? 'Статус' : 'Приоритет задачи'}
                     onChange={handleChange}
                     name={type}

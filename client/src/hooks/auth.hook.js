@@ -15,20 +15,19 @@ export const useAuth = () => {
         await fetch('/clearCookie')
         setUser({})
         setIdSess(null)
-
     }, [])
 
     const isLogin = useCallback(async () => {
-
        const res = await fetch('/is-login')
         const data = await res.json()
       if (!res.ok) {
           console.log(res.status)
       }
         return await data
-    }, [login])
+    }, [])
 
     useEffect( () => {
+
        isLogin()
             .then(d => {
                login(d.id, d.user)

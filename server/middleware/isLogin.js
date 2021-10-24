@@ -7,18 +7,15 @@ const isLogin = async (req, res, next) => {
 
     if (req.cookies['connect.sid']) {
         const idSess = req.cookies['connect.sid'].split('.')[0];
-
         const sessions = await authController.isLogin(idSess.slice(2))
         if (sessions.length) {
             const user = sessions[0].sess.user[0]
             req.activeUser = user
             next()
         } else {
-
+            res.send({name: 'error'})
         }
     } else {
-        console.log('dont cookies')
-
         res.send({"cookie": "false"})
     }
 

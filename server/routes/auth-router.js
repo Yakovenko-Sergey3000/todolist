@@ -76,7 +76,6 @@ router.post('/login', async (req, res) => {
 
     }
 router.get('/is-login', isAuth, async (req,res) => {
-
     try {
         if (req.activeUser) {
             res.send({
@@ -85,7 +84,7 @@ router.get('/is-login', isAuth, async (req,res) => {
             })
         }
     } catch (error) {
-        console.log(error)
+        res.send({error: error})
     }
 })
 
