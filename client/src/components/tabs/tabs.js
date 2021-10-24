@@ -8,6 +8,7 @@ import AllTasks from "../../pages/allTasks";
 import NewTask from "../../pages/newTask"
 import {useContext} from "react";
 import {AuthContext} from "../../context/AuthContext";
+import ResposibleUser from "../../pages/resposibleUser";
 
 
 function TabPanel(props) {
@@ -51,7 +52,7 @@ export default function VerticalTabs() {
 
 
     const showPage = (v) => {
-        const pages = [<AllTasks/>, 'block', <NewTask/>]
+        const pages = [<AllTasks/>, <ResposibleUser/>, <NewTask/>]
         return pages[v]
     }
     const handleChange = (event, newValue) => {
@@ -62,7 +63,7 @@ export default function VerticalTabs() {
 
 const tabs = () => {
     const tabsArr = [
-        <Tab label="Все задачи" {...a11yProps(0)} />,
+        <Tab label="Мои задачи" {...a11yProps(0)} />,
         <Tab label="Ответственные" {...a11yProps(1)} />,
         <Tab label="Новая задача" {...a11yProps(2)} />,
         ]

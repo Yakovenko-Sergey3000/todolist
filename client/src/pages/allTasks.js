@@ -51,6 +51,21 @@ const AllTasks = () => {
 
     }, [request, user])
 
+    const updateData = async (data) => {
+        await request(
+            'api/change-options',
+            'PUT',
+            JSON.stringify(data)
+        )
+        setShowModal(false)
+    }
+
+
+    useEffect(() => {
+        getUserTasks()
+    }, [getUserTasks, showModal])
+
+
     const sortTasks = (value, operator) => {
         const now = moment()
         const monday = now.clone().weekday(0)
@@ -72,23 +87,9 @@ const AllTasks = () => {
                  break;
              default :
          }
-
         setSortTasksOnDays(newArrTasks)
     }
 
-    const updateData = async (data) => {
-       await request(
-            'api/change-options',
-            'PUT',
-            JSON.stringify(data)
-        )
-        setShowModal(false)
-    }
-
-
-    useEffect(() => {
-        getUserTasks()
-    }, [getUserTasks, showModal])
 
 
     return (
@@ -127,8 +128,6 @@ const AllTasks = () => {
                     open={showModal}
                     handleClose={modalClose}
                     task={taskId}
-                    transletePriority={transletePriority}
-                    traslateStatus={traslateStatus}
                     updateData={updateData}
                 />
             </Box>

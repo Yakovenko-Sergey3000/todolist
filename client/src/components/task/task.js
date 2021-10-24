@@ -42,7 +42,7 @@ const Task = ({options,transletePriority, traslateStatus}) => {
     const classes = useStyled()
 
 
-    const {title, status, date_end,priority, surname} = options;
+    const {title, status, date_end,priority, responsibleSurname} = options;
 
     let bgColor = 'rgba(168,168,168,0.68)'
     if(moment(date_end).date() < moment().date()) bgColor = 'rgba(220,97,97,0.66)'
@@ -68,7 +68,7 @@ const Task = ({options,transletePriority, traslateStatus}) => {
                     <Typography sx={{fontSize: "13px"}}>{moment(date_end).format('DD MMMM')}</Typography>
                 </Box>
                 <Box className={classes.task__block}>
-                    <Typography sx={{fontSize: "13px"}}>{surname}</Typography>
+                    <Typography sx={{fontSize: "13px"}}>{responsibleSurname}</Typography>
                 </Box>
                 <Box className={classes.task__block}>
                     <Typography sx={{fontSize: "13px"}}>{traslateStatus[status]}</Typography>

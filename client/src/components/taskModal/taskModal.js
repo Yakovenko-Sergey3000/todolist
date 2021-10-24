@@ -67,11 +67,13 @@ export default function TaskModal({open, handleClose, user, task,  updateData}) 
             setDate_created(moment(task.date_created).format('DD MMMM YYYY'))
             setDate_updated(moment(task.date_updated).format('DD MMMM YYYY'))
             setValueDatePicker(moment(task.date_end))
-            setResponsible(`${task.name} ${task.surname}`)
+            setResponsible(`${task.responsibleName} ${task.responsibleSurname}`)
             setCreator(`${task.creatorName} ${task.creatorSurname}`)
         }
 
     }, [task])
+
+
 
 
     const updateTask = (e) => {

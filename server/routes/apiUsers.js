@@ -54,7 +54,6 @@ router.put('/appoint-admin', isLogin, isAdmin, async (req, res) => {
 
 router.post('/user-tasks', isLogin, async (req, res) => {
     try {
-
         const responce = await userControllers.getMyTasks(req.body)
         res.send(responce)
     } catch (error) {
@@ -64,6 +63,7 @@ router.post('/user-tasks', isLogin, async (req, res) => {
 
 router.post('/assigned-tasks', isLogin, async (req, res) => {
     try {
+
         const responce = await userControllers.getAssignedTasks(req.body)
         res.send(responce)
     } catch (error) {

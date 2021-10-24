@@ -40,7 +40,7 @@ class TasksServices {
             .join('users', 'tasks.responsible', 'users._id')
             .where('users._id', id)
             .orderBy('tasks', 'desc')
-            .select(['tasks.*', 'users.surname', 'users.name'])
+            .select(['tasks.*', 'users.surname AS responsibleSurname', 'users.name AS responsibleName'])
 
 
         const t = await knex('tasks')
@@ -58,16 +58,33 @@ class TasksServices {
 
 
 
-
-
-
     }
 
     async getAssignedTasks(id) {
-        return (await knex('tasks')
-            .join('tasks_relation', 'tasks_relation.task_id', 'tasks._id')
-            .where('tasks_relation.creator_id', id)
-            .select('tasks.*'))
+       try {
+           const tasks =  await knex('tasks')
+               .join('tasks_relation', 'tasks_relation.task_id', 'tasks._id')
+               .where('tasks_relation.creator_id', id)
+               .join('users', 'tasks.creator', 'users._id')
+               .where('users._id', id)
+               .orderBy('tasks', 'desc')
+               .select(['tasks.*', 'users.name AS creatorName', 'users.surname AS creatorSurname'])
+
+           const t = await knex('tasks')
+               .join('tasks_relation', 'tasks_relation.task_id', 'tasks._id')
+               .where('tasks_relation.creator_id', id)
+               .join('users', 'tasks.responsible', 'users._id')
+               .whereIn('users._id', function () {
+                   this.select('responsible')
+               })
+               .select(['users.name AS responsibleName', 'users.surname AS responsibleSurname'])
+
+           return tasks.map((task, i) => {
+               return {...task, ...t[i]}
+           })
+       } catch (e) {
+           console.log(e)
+       }
     }
 
     async changeOptions({ _id, ...options }) {
