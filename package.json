@@ -1,0 +1,21 @@
+{
+  "name": "todo-list",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./server/app.js",
+  "scripts": {
+    "client": "npm run start --prefix ./client",
+    "server": "npm run server --prefix ./server",
+    "serverDepences": "npm i --prefix server",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^6.3.0"
+  }
+}
