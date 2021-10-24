@@ -6,13 +6,14 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import AllTasks from "../../pages/allTasks";
 import NewTask from "../../pages/newTask"
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {AuthContext} from "../../context/AuthContext";
 import ResposibleUser from "../../pages/resposibleUser";
+import AppointUser from "../../pages/appointUser";
 
 
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const { children, value , index, ...other } = props;
 
     return (
         <div
@@ -48,24 +49,25 @@ export default function VerticalTabs() {
     const [value, setValue] = React.useState(0);
 
     const {user} = useContext(AuthContext)
-    console.log(user)
-
 
     const showPage = (v) => {
-        const pages = [<AllTasks/>, <ResposibleUser/>, <NewTask/>]
+        const pages = [<AllTasks/>, <ResposibleUser/>, <NewTask/>, <AppointUser/>]
         return pages[v]
     }
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-
+    useEffect(() => {
+        return  () => <Tab label="Мои задачи" {...a11yProps(0)} />
+    }, [user])
 
 const tabs = () => {
     const tabsArr = [
         <Tab label="Мои задачи" {...a11yProps(0)} />,
         <Tab label="Ответственные" {...a11yProps(1)} />,
         <Tab label="Новая задача" {...a11yProps(2)} />,
+        <Tab label="Назначить администратора" {...a11yProps(3)} />,
         ]
 
     if(user) {
@@ -77,12 +79,8 @@ const tabs = () => {
         }
 
 
-        return tabsArr[0]
+        return tabsArr[value]
     }
-    return null
-
-
-
 
 
 }
@@ -97,22 +95,10 @@ const tabs = () => {
                 value={value}
                 onChange={handleChange}
                 aria-label="Vertical tabs example"
-                sx={{ borderRight: 1, borderColor: 'divider', minWidth: '200px'}}
+                sx={{ borderRight: 1, borderColor: 'divider', minWidth: '300px'}}
             >
                 {tabs()}
             </Tabs>
-            {/*<TabPanel value={value} index={0}>*/}
-            {/*    Активные задачи*/}
-            {/*</TabPanel>*/}
-            {/*<TabPanel value={value} index={1}>*/}
-            {/*    */}
-            {/*</TabPanel>*/}
-            {/*<TabPanel value={value} index={2}>*/}
-            {/*    Отвественные*/}
-            {/*</TabPanel>*/}
-            {/*<TabPanel value={value} index={3}>*/}
-            {/*    Все пользователи*/}
-            {/*</TabPanel>*/}
             {showPage(value)}
 
         </Box>

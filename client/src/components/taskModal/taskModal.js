@@ -43,7 +43,7 @@ const formStyle__item = {
 const styleTitle = {
     marginBottom: '10px'
 }
-export default function TaskModal({open, handleClose, user, task,  updateData}) {
+export default function TaskModal({open, handleClose, user, task = {},  updateData}) {
 
     const [title, setTitle] = useState('')
     const [text, setText] = useState('')

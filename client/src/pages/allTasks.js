@@ -109,7 +109,7 @@ const AllTasks = () => {
                 </Tooltip>
                <List>
                    {
-                      !sortTasksOnDays.length ? <Typography sx={{marginLeft: '20px'}} variant='h3'>Пока что у вас нету задач</Typography> :
+                      !sortTasksOnDays.length ? <Typography sx={{marginLeft: '20px'}} variant='h3'>Пока что у вас нет задач</Typography> :
                           sortTasksOnDays.map(({_id, ...options}, i) => {
                               return (
                                   <ListItem key={_id} onClick={() => modalOpen(_id)}>

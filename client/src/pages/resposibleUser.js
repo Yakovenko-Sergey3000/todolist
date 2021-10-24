@@ -22,13 +22,15 @@ const ResposibleUser = () => {
 
 
     const getTasks = useCallback(async () => {
-        const res = await request(
-            'api/assigned-tasks',
-            'POST',
-            JSON.stringify({id: user._id})
-        )
-        setTasks(res)
-    }, [user, request, showModal])
+      if(user) {
+          const res = await request(
+              'api/assigned-tasks',
+              'POST',
+              JSON.stringify({id: user._id})
+          )
+          setTasks(res)
+      }
+    }, [user, request])
 
     const updateData = async (data) => {
         await request(
@@ -41,8 +43,10 @@ const ResposibleUser = () => {
 
 
     useEffect(() => {
-        getTasks()
-    }, [getTasks])
+        if (user) {
+            getTasks()
+        }
+    }, [getTasks, request, user])
 
 
     const transletePriority = {
@@ -64,7 +68,7 @@ const ResposibleUser = () => {
          <Box sx={{width: '100%', overflow: 'auto'}}>
              <List>
                  {
-                     !tasks.length ? <Typography sx={{marginLeft: '20px'}} variant='h3'>Пока что у вас нету задач</Typography> :
+                     !tasks.length ? <Typography sx={{marginLeft: '20px'}} variant='h3'>Назначеных задач нет</Typography> :
                          tasks.map(({_id, ...options}, i) => {
                              return (
                                  <ListItem key={_id}  onClick={() => modalOpen(_id)} >

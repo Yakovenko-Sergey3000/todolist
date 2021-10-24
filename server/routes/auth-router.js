@@ -46,7 +46,6 @@ router.post(
                     res.send(responce)
                 }
             }
-
         } catch (error) {
             console.log(error);
             res.send(error)
@@ -55,7 +54,6 @@ router.post(
 
 
 router.post('/login', async (req, res) => {
-    console.log(req.body)
     try {
         const responce = await authController.loginUser(req.body)
         if (Array.isArray(responce)) {
@@ -73,7 +71,6 @@ router.post('/login', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.send(error)
-
     }
 router.get('/is-login', isAuth, async (req,res) => {
     try {

@@ -48,8 +48,12 @@ router.post('/create-task',
 })
 
 router.put('/appoint-admin', isLogin, isAdmin, async (req, res) => {
-    await userControllers.appointAdmin(req.body)
-    res.send('ok')
+    try {
+        await userControllers.appointAdmin(req.body)
+        res.send({status: 200})
+    } catch (e) {
+        res.send({error: e})
+    }
 })
 
 router.post('/user-tasks', isLogin, async (req, res) => {

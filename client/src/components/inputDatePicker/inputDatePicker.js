@@ -7,7 +7,7 @@ import ru from 'date-fns/locale/ru'
 
 
 
-export default function InputDatePicker({valueDate, setDate, formaDate = {inputFormat: 'pg', masks: 'pg'}, disablet = false }) {
+export default function InputDatePicker({valueDate = '', setDate, formaDate = {inputFormat: 'pg', masks: 'pg'}, disablet = false }) {
 
 
     const format = {
