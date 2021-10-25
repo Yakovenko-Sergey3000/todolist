@@ -20,7 +20,6 @@ function SimpleDialog(props) {
 
     const getUsers = useCallback(async () => {
         const res = await request('/api/all-users')
-        console.log(res)
         setAllUsers(res)
     }, [request])
 
