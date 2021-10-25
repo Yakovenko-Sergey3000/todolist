@@ -12,11 +12,6 @@ const express = require('express'),
     KnexSessionStore = require('connect-session-knex')(session),
     KnexSessionConfig = require('./knexSession.config')
 
-
-
-
-
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())

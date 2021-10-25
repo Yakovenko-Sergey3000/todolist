@@ -9,8 +9,6 @@ module.exports.up = async () => {
             if (!exists) {
                 return knex.schema.createTable('users', (table) => {
                     table
-                        .increments('id', { primaryKey: false })
-                    table
                         .text('_id')
                         .unique()
                         .notNullable()
@@ -51,9 +49,6 @@ module.exports.up = async () => {
             if (!exists) {
                 return knex.schema.createTable('tasks', (table) => {
                     table
-                        .increments('id', { primaryKey: false })
-
-                    table
                         .text('_id')
                         .unique()
                         .notNullable()
@@ -64,7 +59,7 @@ module.exports.up = async () => {
                     table.text('text')
                     table.date('date_end')
                     table.date('date_created')
-                    table.date('date_start')
+                    table.date('date_updated')
                     table.string('priority')
                     table.string('status')
                     table

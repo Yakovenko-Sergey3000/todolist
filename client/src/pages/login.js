@@ -49,7 +49,7 @@ const Login = () => {
         e.preventDefault()
         try {
             const data = await request('/login', 'POST', JSON.stringify({...form}) )
-
+            console.log(data)
            data.forEach(d => {
                switch (d.param) {
                    case 'login' :

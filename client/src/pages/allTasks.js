@@ -70,6 +70,8 @@ const AllTasks = () => {
         const now = moment()
         const monday = now.clone().weekday(0)
         const sunday = now.clone().weekday(6)
+
+        console.log(monday, sunday, now)
         let newArrTasks = []
 
          switch (value) {
