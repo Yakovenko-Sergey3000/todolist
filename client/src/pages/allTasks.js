@@ -71,7 +71,7 @@ const AllTasks = () => {
         const monday = now.clone().weekday(0)
         const sunday = now.clone().weekday(6)
 
-        console.log(monday, sunday, now)
+       
         let newArrTasks = []
 
          switch (value) {
@@ -82,7 +82,7 @@ const AllTasks = () => {
                  newArrTasks = tasks.filter(t =>  moment(t.date_end).date() === now.date() )
                  break;
              case 'week' :
-                 newArrTasks = tasks.filter(t => moment(t.date_end) >= monday && moment(t.date_end) <= sunday)
+                 newArrTasks = tasks.filter(t => moment(t.date_end).date() >= monday.date() && moment(t.date_end).date() <= sunday.date())
                  break;
              case 'more-week' :
                  newArrTasks = tasks.filter(t => moment(t.date_end) > sunday)

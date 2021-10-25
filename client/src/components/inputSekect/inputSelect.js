@@ -10,7 +10,7 @@ export default function BasicSelect({  isAdmin , type = 'priority', disabled ,ha
     const menuItemPriority = () => {
         let i = 0;
         const itemsPriority = [
-            <MenuItem value="high">Высоки</MenuItem>,
+            <MenuItem value="high">Высокий</MenuItem>,
             <MenuItem value="medium">Средний</MenuItem>,
             <MenuItem value="low">Низкий</MenuItem>,
         ]
