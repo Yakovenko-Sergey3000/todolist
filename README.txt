@@ -1,6 +1,6 @@
 # Todo-list
 * Скачать приложение используя команду:
-> git clone   git@github.com:Yakovenko-Sergey3000/todo-list.git
+> git clone   git@github.com:Yakovenko-Sergey3000/todolist.git
 * Создать базу данных в (**Postgresql**) c названием (**todolist**)
 * В корневом каталого создать файл (**.env**) и задать переменные окружения
 > PORT=
